@@ -53,14 +53,6 @@ class Select_table():
         else:  # 条件为空
             return None
 
-    # 获取表的列名称
-    def select_column(self):
-        sql = "select COLUMN_NAME from information_schema.COLUMNS where table_name = '%s';" % self.table_name
-        res = Data().select(sql)
-        column_list = []
-        for i in res:
-            column_list.append(i[0])
-        return column_list
 
     def page_num(self):  # limit(page_num, page_size)
         page = self.page
@@ -87,51 +79,52 @@ class Select_table():
 
     def select_content_list(self):  # 查询内容列表
 
-        name_list = self.select_column()  # 表头
-
         # 需要where条件+排序条件
         sql = "select * from %s %s limit %s,%s;" % (
         self.table_name, self.translation_condition(), self.page_num(), self.page_size)
 
         res = Data().select(sql)
-        res_list = []
-        for i in res:
-            list_one = list(i)
-            res_one = dict(list(zip(name_list, list_one)))
-            res_one['create_time'] = str(res_one.get('create_time'))
-            res_one['update_time'] = str(res_one.get('update_time'))
-            res_list.append(res_one)
-        return res_list
+        if len(res) != 0:
+            res_list = []
+            for i in res:
+                list_one = list(i)
+                res_list.append(list_one)
+            return res_list
+        else:
+            return 'None'
 
     def get_page_list(self, total_page):  # 翻页列表11页
-        
-        total_list = []
 
-        for i in range(1, total_page + 1):
+        if total_page != 0:
+            total_list = []
 
-            total_list.append(i)
+            for i in range(1, total_page + 1):
 
-        if self.page <= 6 or len(total_list) <= 11 :
+                total_list.append(i)
 
-            # 截取总列表前11位
-            page_list = total_list[:11]
+            if self.page <= 6 or len(total_list) <= 11 :
 
-        elif self.page > 6 and self.page <= total_page - 6:
+                # 截取总列表前11位
+                page_list = total_list[:11]
 
-            # 截取 当前左侧5位
-            page_list_left = total_list[self.page - 6:self.page]
-            
-            # 截取 当前右侧5位
-            page_list_right = total_list[self.page:self.page + 5]
-            
-            # 拼接为一个list
-            page_list = page_list_left + page_list_right
-        
-        elif self.page > 6 and self.page > total_page - 6:
-        
-            page_list = total_list[total_page - 11:]
+            elif self.page > 6 and self.page <= total_page - 6:
 
-        return page_list
+                # 截取 当前左侧5位
+                page_list_left = total_list[self.page - 6:self.page]
+
+                # 截取 当前右侧5位
+                page_list_right = total_list[self.page:self.page + 5]
+
+                # 拼接为一个list
+                page_list = page_list_left + page_list_right
+
+            elif self.page > 6 and self.page > total_page - 6:
+
+                page_list = total_list[total_page - 11:]
+
+            return page_list
+        else:
+            return 'None'
 
     def page_message(self):  # 翻页信息=当前页，上一页，下一页，页面列表
 
@@ -175,14 +168,6 @@ class Operate_table():
         # 数据库名称
         self.table_name = table_name
 
-    # 获取表的列名称
-    def select_column(self):
-        sql = "select COLUMN_NAME from information_schema.COLUMNS where table_name = '%s';" % self.table_name
-        res = Data().select(sql)
-        column_list = []
-        for i in res:
-            column_list.append(i[0])
-        return column_list
 
     # 插入设置数据
     def Add(self, setting_data):
@@ -206,27 +191,29 @@ class Operate_table():
 
     # 查询设置数据
     def Detaile(self, set_id):
-        name_list = self.select_column()  # 表头
         sql = "select * from %s where id='%s'" % (self.table_name, set_id)
         res = Data().select(sql)
         # 结果不为空
         if len(res) != 0:
-            res_one = dict(list(zip(name_list, res[0])))
-            res_one['create_time'] = str(res_one.get('create_time'))
-            res_one['updata_time'] = str(res_one.get('update_time'))
-            return res_one
+            return res[0]
         else:   # 结果为空
             return 'None'
 
     # 更新指定id的设置信息
     def Update(self, setting_data, set_id):
+
         db_text = ''
+
         for x, y in setting_data.items():
+
             if y != '':
+
                 if type(y) == dict:     # json 字段处理
                     db_text = db_text + x + '=' + "'" + json.dumps(y,ensure_ascii=False) + "'" + ','
+
                 elif type(y) == int:    # 整数字段处理
                     db_text = db_text + x + '=' + y + ','
+
                 else:                   # 文本字段处理
                     db_text = db_text + x + '=' + "'" + y + "'" + ','
         sql = "UPDATE %s SET %s WHERE id='%s'" % (self.table_name, db_text[:-1], set_id)
@@ -239,20 +226,29 @@ class Operate_table():
         res = Data().delete(sql)
         return res
 
+    # 批量删除
+    def BatchDelete(self, id_list):
 
-# 封装[表]的基础操作:可复制定制到模块单独定制方法
+        db_text = ''
+
+        for i in id_list:
+
+            db_text = db_text + "b_id=%s or " % i
+
+        sql = "delete from %s where %s" % (self.table_name, db_text[:-4])
+
+        res = Data().delete(sql)
+
+        return res
+
+
+
+# 封装[表]的基础操作:将列表查询、增删改查合并到一个类里面
 class Basic_Operations():
     def __init__(self, table_schema, table_name):
         self.table_schema = table_schema
         self.table_name = table_name
 
-    # 查询表的列名称
-    def show_column(self):
-        sql = "select COLUMN_NAME from information_schema.COLUMNS where table_schema='%s' and table_name = '%s';" % (
-        self.table_schema, self.table_name)
-        res = Data().select(sql)
-        for i in res:
-            print(i[0])
 
     # 获取列表数据
     def show(self, page, page_size, condition):
@@ -291,13 +287,25 @@ class Basic_Operations():
 
     # 查看属性详情
     def detaile(self, id):
+
         o = Operate_table(self.table_name)
 
         res = o.Detaile(id)
 
         return res
 
-# 数据表批量删除、批量插入
+    # 数据表批量删除
+    def batchdel( self, id_list):
+
+        o = Operate_table(self.table_name)
+
+        res = o.BatchDelete(id_list)
+
+        return res
+
+
+    # 数据表批量导入CVS
+    # 数据表批量导出CVS
 
 
 if __name__ == '__main__':
