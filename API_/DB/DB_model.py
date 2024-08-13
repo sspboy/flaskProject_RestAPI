@@ -7,7 +7,9 @@ class Select_table():
 
     # 参数 数据表名称\查询条件where、排序条件order by desc asc、翻页数量、翻页条数、第几页
     config = {
+
         'table_name': '',
+
         'condition': [
 
         ],
@@ -21,6 +23,7 @@ class Select_table():
         'page': ''}
 
     def __init__(self, table_name, page=1, page_size=10, condition=None):
+        # 数据表名称
         self.table_name = table_name
         self.page = page
         self.page_size = page_size
@@ -30,6 +33,7 @@ class Select_table():
     def translation_condition(self):
 
         if self.condition != None:  # 条件不为空
+
             where_text = ''
             o_text = ''
             for i in self.condition:
@@ -47,6 +51,7 @@ class Select_table():
                     condition = i.get('condition')[0]
 
                     o_text = ' order by ' + condition.get('column_name') + ' ' + condition.get('value')
+
             condition_text = where_text + o_text
 
             return condition_text
@@ -165,7 +170,7 @@ class Select_table():
 class Operate_table():
 
     def __init__(self, table_name):
-        # 数据库名称
+        # 数据表名称
         self.table_name = table_name
 
 
@@ -191,12 +196,18 @@ class Operate_table():
 
     # 查询设置数据
     def Detaile(self, set_id):
+
         sql = "select * from %s where id='%s'" % (self.table_name, set_id)
+
         res = Data().select(sql)
+
         # 结果不为空
         if len(res) != 0:
+
             return res[0]
+
         else:   # 结果为空
+
             return 'None'
 
     # 更新指定id的设置信息
@@ -216,8 +227,11 @@ class Operate_table():
 
                 else:                   # 文本字段处理
                     db_text = db_text + x + '=' + "'" + y + "'" + ','
+
         sql = "UPDATE %s SET %s WHERE id='%s'" % (self.table_name, db_text[:-1], set_id)
+
         res = Data().updata(sql)
+
         return res
 
     # 删除指定的设置信息
@@ -227,13 +241,17 @@ class Operate_table():
         return res
 
     # 批量删除
-    def BatchDelete(self, id_list):
+    def BatchDelete(self, id_list_obj):
+
+        keys = list(id_list_obj.keys())[0] # 删除字段的名称
+
+        values = id_list_obj.get(keys)
 
         db_text = ''
 
-        for i in id_list:
+        for i in values:
 
-            db_text = db_text + "b_id=%s or " % i
+            db_text = db_text + "%s=%s or " % (keys, i)
 
         sql = "delete from %s where %s" % (self.table_name, db_text[:-4])
 
@@ -242,11 +260,9 @@ class Operate_table():
         return res
 
 
-
 # 封装[表]的基础操作:将列表查询、增删改查合并到一个类里面
 class Basic_Operations():
-    def __init__(self, table_schema, table_name):
-        self.table_schema = table_schema
+    def __init__(self, table_name):
         self.table_name = table_name
 
 
@@ -308,6 +324,9 @@ class Basic_Operations():
     # 数据表批量导出CVS
 
 
+# 多表关联查询
+
+
 if __name__ == '__main__':
 
     # table:列表、翻页、多条件查询：：：：条件配置说明
@@ -319,9 +338,10 @@ if __name__ == '__main__':
     # 条件类型：模糊搜索
 
     condition = [
-        {'type': 'where',
+        {
+            'type': 'where',
 
-         'condition': [
+            'condition': [
             #{'column_name': 'create_time', 'value': '2020-11-16 16:10:10', 'operator': '>'},
             #{'column_name': 'create_time', 'value': '2023-11-16 16:12:10', 'operator': '<'},
             {'column_name':'shop_id','value':'5580507','operator':'='}]},                                  # 查询条件语句
@@ -329,7 +349,8 @@ if __name__ == '__main__':
         # {'type':'where',
         # 'condition':[{'column_name':'shop_id','value':'%1312830%','operator':'like'}]}, # 模糊查询语句
 
-        {'type': 'orderby', 'condition': [{'column_name': 'id', 'value': 'asc', }]}                       # 排序条件语句
+        {
+            'type': 'orderby', 'condition': [{'column_name': 'id', 'value': 'asc', }]}                       # 排序条件语句
 
     ]
 

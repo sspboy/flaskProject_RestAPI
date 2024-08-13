@@ -1,6 +1,7 @@
 from flask_restful import Resource                      # 接口处理方法
 from API_.DB.DB_model import Basic_Operations           # 数据查询方法
 from flask import request
+from API_.resources.admin import get_function_name      #
 import json
 
 
@@ -9,21 +10,26 @@ class _list:
 
     def __init__(self):      # 列表数据
 
-        self.table_schema = 'master'
-        self.table_name = 'menu'
+        self.table_name = 'user'
 
         # 数据表头名称、数据类型、描述说明
         self.DataColumn =[
             {
-                "field_name": "id",   # 字段名称
+                "field_name": "b_id",   # 字段名称
                 "field_type": "int",    # 字段类型
-                "remark": "菜单id",      # 备注描述
+                "remark": "品牌id",      # 备注描述
             },
-            {"field_name": "parent_id", "field_type": "int", "remark": "父id"},
-            {"field_name": "ico_name", "field_type": "str", "remark": "菜单图标名称"},
-            {"field_name": "name", "field_type": "str", "remark": "菜单名称"},
-            {"field_name": "field", "field_type": "str", "remark": "功能字符"},
-            {"field_name": "function_info", "field_type": "str", "remark": "权限配置"},
+            {"field_name": "account_type", "field_type": "int", "remark": "账号类型"},
+            {"field_name": "id", "field_type": "str", "remark": "用户登录id"},
+            {"field_name": "v_id", "field_type": "int", "remark": "版本id"},
+            {"field_name": "nickname", "field_type": "str", "remark": "用户昵称"},
+            {"field_name": "pass_word", "field_type": "str", "remark": "密码"},
+            {"field_name": "brand_name", "field_type": "str", "remark": "品牌名称"},
+            {"field_name": "mobile", "field_type": "str", "remark": "手机号码"},
+            {"field_name": "role", "field_type": "str", "remark": "用户角色"},
+            {"field_name": "department_id", "field_type": "int", "remark": "部门id"},
+            {"field_name": "department_name", "field_type": "str", "remark": "部门名称"},
+            {"field_name": "state", "field_type": "int", "remark": "账号状态"},
             {"field_name": "create_time", "field_type": "timestamp", "remark": "创建时间"},
             {"field_name": "update_time", "field_type": "timestamp", "remark": "更新时间"}
         ]
@@ -66,46 +72,50 @@ class _list:
 
 
 # 用户详情接口资源
-class MenuDetaile(Resource):
+class UserDetaile(Resource):
 
     # 查询详情
+    @get_function_name
     def get(self, u_id):
-        user = Basic_Operations(_list().table_schema, _list().table_name)
+        user = Basic_Operations(_list().table_name)
         res = user.detaile(u_id)
         detaile_data = _list().re_detaile_data_name(res)
         return detaile_data
 
 
     # 删-详情
+    @get_function_name
     def delete(self, u_id):
-        user = Basic_Operations(_list().table_schema, _list().table_name)
+        user = Basic_Operations(_list().table_name)
         res = user.delete(u_id)
         return res
 
 
     # 改（更新）-详情
+    @get_function_name
     def put(self, u_id):
         re_data = json.loads(request.get_data())
         setting_data = re_data.get('setting_data')
-        user = Basic_Operations(_list().table_schema, _list().table_name)
+        user = Basic_Operations(_list().table_name)
         res = user.update(setting_data, u_id)
         return res
 
 
 # 用户列表接口资源
-class MenuList(Resource):
+class UserList(Resource):
 
 
     # 批量删除
+    @get_function_name
     def put(self):
         re_data = json.loads(request.get_data())
-        id_list = re_data.get('id_list')
-        user = Basic_Operations(_list().table_schema, _list().table_name)
-        res = user.batchdel(id_list)
+        user = Basic_Operations(_list().table_name)
+        res = user.batchdel(re_data)
         return res
 
 
     # 列表查询::
+    @get_function_name
     def post(self):
 
         re_data = json.loads(request.get_data())
@@ -116,7 +126,7 @@ class MenuList(Resource):
 
         condition = re_data.get('condition')
 
-        user = Basic_Operations(_list().table_schema, _list().table_name)
+        user = Basic_Operations(_list().table_name)
 
         res = user.show(page, page_size, condition)
 
@@ -129,12 +139,13 @@ class MenuList(Resource):
 
 
 # 添加数据
-class MenuAdd(Resource):
+class UserAdd(Resource):
 
 
     # 增
+    @get_function_name
     def post(self):
         re_data = json.loads(request.get_data())
-        user = Basic_Operations(_list().table_schema, _list().table_name)
+        user = Basic_Operations(_list().table_name)
         res = user.add(re_data)
         return res
