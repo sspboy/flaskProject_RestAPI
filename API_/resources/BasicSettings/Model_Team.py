@@ -8,18 +8,22 @@ import json
 class _list:
 
     def __init__(self):      # 列表数据
-        self.table_name = 'menufun'
+        self.table_name = 'team'
         # 数据表头名称、数据类型、描述说明
         self.DataColumn =[
             {
                 "field_name": "id",   # 字段名称
                 "field_type": "int",    # 字段类型
-                "remark": "功能id",      # 备注描述
+                "remark": "数据唯一id",      # 备注描述
             },
-            {"field_name": "m_id", "field_type": "int", "remark": "关联菜单id"},
-            {"field_name": "name", "field_type": "int", "remark": "功能名称"},
-            {"field_name": "def_name", "field_type": "str", "remark": "函数名称字符user.add"},
-            {"field_name": "miaoshu", "field_type": "str", "remark": "描述"},
+            {"field_name": "b_id", "field_type": "int", "remark": "品牌id"},
+            {"field_name": "nickname", "field_type": "str", "remark": "昵称"},
+            {"field_name": "mobile", "field_type": "int", "remark": "手机号"},
+            {"field_name": "password", "field_type": "str", "remark": "密码"},
+            {"field_name": "state", "field_type": "int", "remark": "员工状态"},
+            {"field_name": "role", "field_type": "str", "remark": "角色"},
+            {"field_name": "department_id", "field_type": "int", "remark": "部门id"},
+            {"field_name": "department_name", "field_type": "str", "remark": "部门名称"},
             {"field_name": "create_time", "field_type": "timestamp", "remark": "创建时间"},
             {"field_name": "update_time", "field_type": "timestamp", "remark": "更新时间"}
         ]
@@ -31,6 +35,7 @@ class _list:
             f_name = i.get('field_name')
             r_list.append(f_name)
         return r_list
+
 
     # 添加数据列表字段名称
     def re_data_list_name(self,data_list):
@@ -60,7 +65,7 @@ class _list:
 
 
 # 用户详情接口资源
-class FunDetaile(Resource):
+class TeamDetaile(Resource):
 
     # 查询详情
     def get(self, u_id):
@@ -87,7 +92,7 @@ class FunDetaile(Resource):
 
 
 # 用户列表接口资源
-class FunList(Resource):
+class TeamList(Resource):
 
 
     # 批量删除
@@ -122,7 +127,7 @@ class FunList(Resource):
 
 
 # 添加数据
-class FunAdd(Resource):
+class TeamAdd(Resource):
 
     # 增
     def post(self):

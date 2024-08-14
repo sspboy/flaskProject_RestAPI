@@ -8,21 +8,31 @@ import json
 class _list:
 
     def __init__(self):      # 列表数据
-        self.table_name = 'menufun'
+
+        self.table_name = 'user' # 品牌信息表
+
         # 数据表头名称、数据类型、描述说明
         self.DataColumn =[
             {
-                "field_name": "id",   # 字段名称
+                "field_name": "b_id",   # 字段名称
                 "field_type": "int",    # 字段类型
-                "remark": "功能id",      # 备注描述
+                "remark": "品牌id",      # 备注描述
             },
-            {"field_name": "m_id", "field_type": "int", "remark": "关联菜单id"},
-            {"field_name": "name", "field_type": "int", "remark": "功能名称"},
-            {"field_name": "def_name", "field_type": "str", "remark": "函数名称字符user.add"},
-            {"field_name": "miaoshu", "field_type": "str", "remark": "描述"},
+            {"field_name": "account_type", "field_type": "int", "remark": "账号类型"},
+            {"field_name": "id", "field_type": "str", "remark": "用户登录id"},
+            {"field_name": "v_id", "field_type": "int", "remark": "版本id"},
+            {"field_name": "nickname", "field_type": "str", "remark": "用户昵称"},
+            {"field_name": "pass_word", "field_type": "str", "remark": "密码"},
+            {"field_name": "brand_name", "field_type": "str", "remark": "品牌名称"},
+            {"field_name": "mobile", "field_type": "str", "remark": "手机号码"},
+            {"field_name": "role", "field_type": "str", "remark": "用户角色"},
+            {"field_name": "department_id", "field_type": "int", "remark": "部门id"},
+            {"field_name": "department_name", "field_type": "str", "remark": "部门名称"},
+            {"field_name": "state", "field_type": "int", "remark": "账号状态"},
             {"field_name": "create_time", "field_type": "timestamp", "remark": "创建时间"},
             {"field_name": "update_time", "field_type": "timestamp", "remark": "更新时间"}
         ]
+
 
     # 获取数据表的列名称
     def re_colum_list(self):
@@ -31,6 +41,7 @@ class _list:
             f_name = i.get('field_name')
             r_list.append(f_name)
         return r_list
+
 
     # 添加数据列表字段名称
     def re_data_list_name(self,data_list):
@@ -60,7 +71,7 @@ class _list:
 
 
 # 用户详情接口资源
-class FunDetaile(Resource):
+class BrandDetaile(Resource):
 
     # 查询详情
     def get(self, u_id):
@@ -68,13 +79,6 @@ class FunDetaile(Resource):
         res = user.detaile(u_id)
         detaile_data = _list().re_detaile_data_name(res)
         return detaile_data
-
-
-    # 删-详情
-    def delete(self, u_id):
-        user = Basic_Operations(_list().table_name)
-        res = user.delete(u_id)
-        return res
 
 
     # 改（更新）-详情
@@ -85,48 +89,3 @@ class FunDetaile(Resource):
         res = user.update(setting_data, u_id)
         return res
 
-
-# 用户列表接口资源
-class FunList(Resource):
-
-
-    # 批量删除
-    def put(self):
-        re_data = json.loads(request.get_data())
-        user = Basic_Operations(_list().table_name)
-        res = user.batchdel(re_data)
-        return res
-
-
-    # 列表查询::
-    def post(self):
-
-        re_data = json.loads(request.get_data())
-
-        page = re_data.get('page')
-
-        page_size = re_data.get('page_size')
-
-        condition = re_data.get('condition')
-
-        user = Basic_Operations(_list().table_name)
-
-        res = user.show(page, page_size, condition)
-
-        # 转换datalist字段名称
-        data_list = res.get('data')
-
-        res['data'] = _list().re_data_list_name(data_list)
-
-        return res
-
-
-# 添加数据
-class FunAdd(Resource):
-
-    # 增
-    def post(self):
-        re_data = json.loads(request.get_data())
-        user = Basic_Operations(_list().table_name)
-        res = user.add(re_data)
-        return res

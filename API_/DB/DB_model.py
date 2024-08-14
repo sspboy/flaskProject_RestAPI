@@ -1,6 +1,18 @@
 from API_.DB.Data_con import Data
 import datetime, json, math
 
+# 注册验证用户名称是否存在
+# 要检查的用户名
+# username_to_check = 'desired_username'
+#
+# # 执行查询
+# cursor.execute("""
+#   SELECT EXISTS(
+#     SELECT 1 FROM users WHERE username = %s
+#   ) AS `user_exists`
+# """, (username_to_check,))
+
+
 
 # 数据表-组件+翻页+跳转指定页面
 class Select_table():

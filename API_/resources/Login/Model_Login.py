@@ -16,7 +16,7 @@ class Login():
     def get_user_message(self):
         pass
 
-
+# 【品牌用户】权限验证
 def get_function_name(func):
     def wrapper(*args, **kwargs):
         print(f"Function name: {func.__qualname__}")

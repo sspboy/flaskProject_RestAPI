@@ -4,13 +4,13 @@ from flask_restful import Api
 from API_.resources.admin.Model_Users import UserDetaile,UserList,UserAdd               # 【user】用户资源
 from API_.resources.admin.Model_Menu import MenuDetaile,MenuList,MenuAdd                # 【menu】菜单资源
 from API_.resources.admin.Model_Version import VersionDetaile,VersionList,VersionAdd    # 【version】版本资源
-from API_.resources.admin.Model_Fun import FunDetaile,FunList,FunAdd    # 【version】版本资源
-# 【permiss】功能权限资源
+from API_.resources.admin.Model_Fun import FunDetaile,FunList,FunAdd                    # 【function】功能权限资源
 
 
 admin_blueprint = Blueprint('admin', __name__)
 
 api = Api(admin_blueprint)
+
 
 # 用户
 api.add_resource(UserAdd, '/user/add')              # 新增
