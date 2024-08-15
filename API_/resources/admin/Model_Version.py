@@ -2,7 +2,7 @@ from flask_restful import Resource                      # 接口处理方法
 from API_.DB.DB_model import Basic_Operations           # 数据查询方法
 from flask import request
 import json
-
+from flask_login import login_required
 
 # 定义【输出】模型：详情
 class _list:
@@ -66,6 +66,7 @@ class _list:
 class VersionDetaile(Resource):
 
     # 查询详情
+    @login_required
     def get(self, u_id):
         user = Basic_Operations(_list().table_name)
         res = user.detaile(u_id)

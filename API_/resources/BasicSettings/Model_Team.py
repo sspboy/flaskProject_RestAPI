@@ -16,12 +16,15 @@ class _list:
                 "field_type": "int",    # 字段类型
                 "remark": "数据唯一id",      # 备注描述
             },
+            {"field_name": "name", "field_type": "str", "remark": "子账号user:name"},
             {"field_name": "b_id", "field_type": "int", "remark": "品牌id"},
             {"field_name": "nickname", "field_type": "str", "remark": "昵称"},
             {"field_name": "mobile", "field_type": "int", "remark": "手机号"},
             {"field_name": "password", "field_type": "str", "remark": "密码"},
             {"field_name": "state", "field_type": "int", "remark": "员工状态"},
             {"field_name": "role", "field_type": "str", "remark": "角色"},
+            {"field_name": "funpermission", "field_type": "str", "remark": "功能权限"},
+            {"field_name": "datapermission", "field_type": "str", "remark": "数据权限"},
             {"field_name": "department_id", "field_type": "int", "remark": "部门id"},
             {"field_name": "department_name", "field_type": "str", "remark": "部门名称"},
             {"field_name": "create_time", "field_type": "timestamp", "remark": "创建时间"},

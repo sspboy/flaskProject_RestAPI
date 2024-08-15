@@ -11,6 +11,8 @@ admin_blueprint = Blueprint('admin', __name__)
 
 api = Api(admin_blueprint)
 
+# 登录管理后台
+
 
 # 用户
 api.add_resource(UserAdd, '/user/add')              # 新增
