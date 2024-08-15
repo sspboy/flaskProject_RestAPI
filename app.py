@@ -17,8 +17,8 @@ login_manager.login_message = 'Access denied.'      # 用户未登录时显示�
 login_manager.session_protection = "strong"
 login_manager.init_app(app)
 
-# 登录
 
+# 登录
 @login_manager.user_loader
 def user_loader(username):
 
@@ -112,4 +112,4 @@ app.register_blueprint(setting_blueprint, url_prefix='/setting')
 
 if __name__ == '__main__':
 
-    app.run(debug=True)
+    app.run(port=5000,debug=True,host='0.0.0.0')
