@@ -22,7 +22,7 @@ class Run():
     @staticmethod
     def run():
         # os.system('www/flaskProject_RestAPI/env/Scripts/activate &cd /www/flaskProject_RestAPI &python app.py')
-        os.system('call www/flaskProject_RestAPI/env/Scripts/activate &cd /www/flaskProject_RestAPI &python app.py')
+        os.system('d: &call /www/flaskProject_RestAPI/env/Scripts/activate &cd /www/flaskProject_RestAPI &python app.py')
 
 
 argvs = sys.argv[1:]
