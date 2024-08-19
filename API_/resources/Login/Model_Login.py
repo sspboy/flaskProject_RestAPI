@@ -90,6 +90,7 @@ def user_loader(username):
 # 定义【user输出格式】模型：详情
 class _list:
 
+
     def __init__(self):      # 列表数据
 
         self.table_name = 'user'

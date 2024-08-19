@@ -2,7 +2,7 @@ from flask_restful import Resource                      # 接口处理方法
 from API_.DB.DB_model import Basic_Operations           # 数据查询方法
 from flask import request
 from flask_login import login_required,current_user
-from API_.resources.admin import get_function_name      # 鉴权方法
+from API_.resources.admin import get_admin_power      # 鉴权方法
 import json
 
 
@@ -77,7 +77,7 @@ class UserDetaile(Resource):
 
     # 查询详情
     @login_required
-    @get_function_name
+    @get_admin_power
     def get(self, u_id):
         user = Basic_Operations(_list().table_name)
         res = user.detaile(u_id)
@@ -87,7 +87,7 @@ class UserDetaile(Resource):
 
     # 删-详情
     @login_required
-    @get_function_name
+    @get_admin_power
     def delete(self, u_id):
         user = Basic_Operations(_list().table_name)
         res = user.delete(u_id)
@@ -96,7 +96,7 @@ class UserDetaile(Resource):
 
     # 改（更新）-详情
     @login_required
-    @get_function_name
+    @get_admin_power
     def put(self, u_id):
         re_data = json.loads(request.get_data())
         setting_data = re_data.get('setting_data')
@@ -110,7 +110,7 @@ class UserList(Resource):
 
     # 批量删除
     @login_required
-    @get_function_name
+    @get_admin_power
     def put(self):
         re_data = json.loads(request.get_data())
         user = Basic_Operations(_list().table_name)
@@ -120,7 +120,7 @@ class UserList(Resource):
 
     # 列表查询::
     @login_required
-    @get_function_name
+    @get_admin_power
     def post(self):
         user_name = current_user.id
         account_type = current_user.account_type
@@ -152,7 +152,7 @@ class UserAdd(Resource):
 
     # 增
     @login_required
-    @get_function_name
+    @get_admin_power
     def post(self):
         re_data = json.loads(request.get_data())
         user = Basic_Operations(_list().table_name)

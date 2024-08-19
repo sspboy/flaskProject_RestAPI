@@ -65,6 +65,8 @@ class _list:
 class MenuDetaile(Resource):
 
     # 查询详情
+    @login_required
+    @get_admin_power
     def get(self, u_id):
         user = Basic_Operations(_list().table_name)
         res = user.detaile(u_id)
@@ -73,6 +75,8 @@ class MenuDetaile(Resource):
 
 
     # 删-详情
+    @login_required
+    @get_admin_power
     def delete(self, u_id):
         user = Basic_Operations(_list().table_name)
         res = user.delete(u_id)
@@ -80,6 +84,8 @@ class MenuDetaile(Resource):
 
 
     # 改（更新）-详情
+    @login_required
+    @get_admin_power
     def put(self, u_id):
         re_data = json.loads(request.get_data())
         setting_data = re_data.get('setting_data')
@@ -93,6 +99,8 @@ class MenuList(Resource):
 
 
     # 批量删除
+    @login_required
+    @get_admin_power
     def put(self):
         re_data = json.loads(request.get_data())
         user = Basic_Operations(_list().table_name)
@@ -101,6 +109,8 @@ class MenuList(Resource):
 
 
     # 列表查询::
+    @login_required
+    @get_admin_power
     def post(self):
 
         re_data = json.loads(request.get_data())
@@ -127,6 +137,8 @@ class MenuList(Resource):
 class MenuAdd(Resource):
 
     # 增
+    @login_required
+    @get_admin_power
     def post(self):
         re_data = json.loads(request.get_data())
         user = Basic_Operations(_list().table_name)

@@ -10,13 +10,9 @@ from API_.resources.Login.Model_Login import login_manager
 app = Flask(__name__)
 app.secret_key = 'sspboy'                           # Change this!
 app.permanent_session_lifetime = datetime.timedelta(minutes=100)  # 1分钟有效的seassion
-
 login_manager.init_app(app)
 
-
-
-
-
+# login 登录模块
 app.register_blueprint(login_blueprint, url_prefix='/login')
 
 
@@ -28,7 +24,7 @@ app.register_blueprint(admin_blueprint, url_prefix='/admin')
 app.register_blueprint(setting_blueprint, url_prefix='/setting')
 
 
-# 前台应用-appname123
+# 前台应用-appname
 
 
 if __name__ == '__main__':
