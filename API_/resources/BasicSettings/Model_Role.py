@@ -17,9 +17,9 @@ class _list:
                 "remark": "数据唯一id",      # 备注描述
             },
             {"field_name": "b_id", "field_type": "int", "remark": "品牌id"},
-            {"field_name": "name", "field_type": "str", "remark": "角色名称"},
-            {"field_name": "info", "field_type": "json", "remark": "角色描述"},
-            {"field_name": "state", "field_type": "int", "remark": "停用状态"},
+            {"field_name": "role_name", "field_type": "str", "remark": "角色名称"},
+            {"field_name": "role_info", "field_type": "json", "remark": "角色描述"},
+            {"field_name": "role_state", "field_type": "int", "remark": "停用状态"},
             {"field_name": "view_permissions", "field_type": "int", "remark": "视图权限"},
             {"field_name": "data_permissions", "field_type": "int", "remark": "数据权限"},
             {"field_name": "fun_permissions", "field_type": "int", "remark": "功能权限"},

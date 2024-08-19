@@ -1,7 +1,8 @@
 from flask_restful import Resource                      # 接口处理方法
 from API_.DB.DB_model import Basic_Operations           # 数据查询方法
 from flask import request
-from API_.resources.admin import get_function_name      #
+from flask_login import login_required,current_user
+from API_.resources.admin import get_function_name      # 鉴权方法
 import json
 
 
@@ -75,6 +76,7 @@ class _list:
 class UserDetaile(Resource):
 
     # 查询详情
+    @login_required
     @get_function_name
     def get(self, u_id):
         user = Basic_Operations(_list().table_name)
@@ -84,6 +86,7 @@ class UserDetaile(Resource):
 
 
     # 删-详情
+    @login_required
     @get_function_name
     def delete(self, u_id):
         user = Basic_Operations(_list().table_name)
@@ -92,6 +95,7 @@ class UserDetaile(Resource):
 
 
     # 改（更新）-详情
+    @login_required
     @get_function_name
     def put(self, u_id):
         re_data = json.loads(request.get_data())
@@ -104,8 +108,8 @@ class UserDetaile(Resource):
 # 用户列表接口资源
 class UserList(Resource):
 
-
     # 批量删除
+    @login_required
     @get_function_name
     def put(self):
         re_data = json.loads(request.get_data())
@@ -115,9 +119,13 @@ class UserList(Resource):
 
 
     # 列表查询::
+    @login_required
     @get_function_name
     def post(self):
-
+        user_name = current_user.id
+        account_type = current_user.account_type
+        print(user_name)
+        print(account_type)
         re_data = json.loads(request.get_data())
 
         page = re_data.get('page')
@@ -143,6 +151,7 @@ class UserAdd(Resource):
 
 
     # 增
+    @login_required
     @get_function_name
     def post(self):
         re_data = json.loads(request.get_data())
