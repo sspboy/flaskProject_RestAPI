@@ -1,6 +1,8 @@
 from flask_restful import Resource                      # 接口处理方法
 from API_.DB.DB_model import Basic_Operations           # 数据查询方法
 from flask import request
+from flask_login import login_required
+from API_.resources.admin import get_admin_power      # 鉴权方法
 import json
 
 

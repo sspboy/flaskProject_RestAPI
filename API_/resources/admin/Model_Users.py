@@ -122,10 +122,7 @@ class UserList(Resource):
     @login_required
     @get_admin_power
     def post(self):
-        user_name = current_user.id
-        account_type = current_user.account_type
-        print(user_name)
-        print(account_type)
+
         re_data = json.loads(request.get_data())
 
         page = re_data.get('page')
@@ -142,6 +139,9 @@ class UserList(Resource):
         data_list = res.get('data')
 
         res['data'] = _list().re_data_list_name(data_list)
+
+        # 用户信息
+        res['user'] = current_user.user_obj
 
         return res
 

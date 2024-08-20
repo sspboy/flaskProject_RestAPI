@@ -13,11 +13,12 @@ login_manager.session_protection = "strong"
 
 # 定义【user】模版
 class User(UserMixin):
-    def __init__(self, id, username, password, account_type):
+    def __init__(self, id, username, password, account_type, user_obj):
         self.id = id
         self.username = username
         self.password = password
         self.account_type = account_type
+        self.user_obj = user_obj
 
 
 # 数据库查询用户信息
@@ -82,7 +83,7 @@ def user_loader(username):
 
         account_type = user_obj.get('account_type')   # 账号类型
 
-        user = User(id, username, password, account_type)
+        user = User(id, username, password, account_type, user_obj)
 
         return user
 
