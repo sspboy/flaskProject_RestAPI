@@ -16,23 +16,25 @@ class _list:
         # 数据表头名称、数据类型、描述说明
         self.DataColumn =[
             {
+                "key":"1",
                 "field_name": "b_id",   # 字段名称
                 "field_type": "int",    # 字段类型
-                "remark": "品牌id",      # 备注描述
+                "title": "品牌id",       # 备注标题
+                "dataIndex":"b_id",     # 数据索引
             },
-            {"field_name": "account_type", "field_type": "int", "remark": "账号类型"},
-            {"field_name": "id", "field_type": "str", "remark": "用户登录id"},
-            {"field_name": "v_id", "field_type": "int", "remark": "版本id"},
-            {"field_name": "nickname", "field_type": "str", "remark": "用户昵称"},
-            {"field_name": "pass_word", "field_type": "str", "remark": "密码"},
-            {"field_name": "brand_name", "field_type": "str", "remark": "品牌名称"},
-            {"field_name": "mobile", "field_type": "str", "remark": "手机号码"},
-            {"field_name": "role", "field_type": "str", "remark": "用户角色"},
-            {"field_name": "department_id", "field_type": "int", "remark": "部门id"},
-            {"field_name": "department_name", "field_type": "str", "remark": "部门名称"},
-            {"field_name": "state", "field_type": "int", "remark": "账号状态"},
-            {"field_name": "create_time", "field_type": "timestamp", "remark": "创建时间"},
-            {"field_name": "update_time", "field_type": "timestamp", "remark": "更新时间"}
+            {"key":"2","field_name": "account_type", "field_type": "int", "title": "账号类型","dataIndex":"account_type",},
+            {"key":"3","field_name": "id", "field_type": "str", "title": "用户登录id","dataIndex":"id",},
+            {"key":"4","field_name": "v_id", "field_type": "int", "title": "版本id","dataIndex":"v_id",},
+            {"key":"5","field_name": "nickname", "field_type": "str", "title": "用户昵称","dataIndex":"nickname",},
+            {"key":"6","field_name": "pass_word", "field_type": "str", "title": "密码","dataIndex":"pass_word",},
+            {"key":"7","field_name": "brand_name", "field_type": "str", "title": "品牌名称","dataIndex":"brand_name",},
+            {"key":"8","field_name": "mobile", "field_type": "str", "title": "手机号码","dataIndex":"mobile",},
+            {"key":"9","field_name": "role", "field_type": "str", "title": "用户角色","dataIndex":"role",},
+            {"key":"10","field_name": "department_id", "field_type": "int", "title": "部门id","dataIndex":"department_id",},
+            {"key":"11","field_name": "department_name", "field_type": "str", "title": "部门名称","dataIndex":"department_name",},
+            {"key":"12","field_name": "state", "field_type": "int", "title": "账号状态","dataIndex":"state",},
+            {"key":"13","field_name": "create_time", "field_type": "timestamp", "title": "创建时间","dataIndex":"create_time",},
+            {"key":"14","field_name": "update_time", "field_type": "timestamp", "title": "更新时间","dataIndex":"update_time",}
         ]
 
 
@@ -143,12 +145,14 @@ class UserList(Resource):
         # 用户信息
         res['user'] = current_user.user_obj
 
+        # 表头信息
+        res['colum'] = _list().DataColumn
+        
         return res
 
 
 # 添加数据
 class UserAdd(Resource):
-
 
     # 增
     @login_required
