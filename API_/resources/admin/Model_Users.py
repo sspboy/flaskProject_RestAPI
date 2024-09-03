@@ -3,7 +3,7 @@ from API_.DB.DB_model import Basic_Operations           # 数据查询方法
 from flask import request
 from flask_login import login_required,current_user
 from API_.resources.admin import get_admin_power      # 鉴权方法
-import json
+import json,time
 
 
 # 定义【输出】模型：详情
@@ -147,7 +147,7 @@ class UserList(Resource):
 
         # 表头信息
         res['colum'] = _list().DataColumn
-        
+
         return res
 
 

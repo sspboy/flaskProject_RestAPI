@@ -2,7 +2,7 @@ from flask_restful import Resource                      # 接口处理方法
 from API_.DB.DB_model import Basic_Operations           # 数据查询方法
 from flask import request
 import json
-from flask_login import login_required
+from flask_login import login_required,current_user
 
 # 定义【输出】模型：详情
 class _list:
@@ -12,18 +12,21 @@ class _list:
         # 数据表头名称、数据类型、描述说明
         self.DataColumn =[
             {
-                "field_name": "id",   # 字段名称
-                "field_type": "int",    # 字段类型
-                "remark": "数据唯一id",      # 备注描述
+                'key':'1',
+                "field_name": "id",    # 字段名称
+                "field_type": "int",   # 字段类型
+                "title": "id",  # 备注描述
+                "dataIndex": "id",
+
             },
-            {"field_name": "version_number", "field_type": "float", "remark": "版本号"},
-            {"field_name": "version_name", "field_type": "str", "remark": "版本名称"},
-            {"field_name": "menu_setting", "field_type": "json", "remark": "菜单以及权限"},
-            {"field_name": "price", "field_type": "int", "remark": "价格"},
-            {"field_name": "sub_account_number", "field_type": "int", "remark": "账号数量"},
-            {"field_name": "duration", "field_type": "int", "remark": "使用时长月为单位"},
-            {"field_name": "create_time", "field_type": "timestamp", "remark": "创建时间"},
-            {"field_name": "update_time", "field_type": "timestamp", "remark": "更新时间"}
+            {'key':'2',"field_name": "version_number", "field_type": "float", "title": "版本号","dataIndex": "version_number",},
+            {'key':'3',"field_name": "version_name", "field_type": "str", "title": "版本名称","dataIndex": "version_name",},
+            {'key':'4',"field_name": "menu_setting", "field_type": "json", "title": "菜单以及权限","dataIndex": "menu_setting",},
+            {'key':'5',"field_name": "price", "field_type": "int", "title": "价格","dataIndex": "price",},
+            {'key':'6',"field_name": "sub_account_number", "field_type": "int", "title": "账号数量","dataIndex": "sub_account_number",},
+            {'key':'7',"field_name": "duration", "field_type": "int", "title": "使用时长月为单位","dataIndex": "duration",},
+            {'key':'8',"field_name": "create_time", "field_type": "timestamp", "title": "创建时间","dataIndex": "create_time",},
+            {'key':'9',"field_name": "update_time", "field_type": "timestamp", "title": "更新时间","dataIndex": "update_time",}
         ]
 
     # 获取数据表的列名称
@@ -121,6 +124,12 @@ class VersionList(Resource):
         data_list = res.get('data')
 
         res['data'] = _list().re_data_list_name(data_list)
+
+        # 用户信息
+        res['user'] = current_user.user_obj
+
+        # 表头信息
+        res['colum'] = _list().DataColumn
 
         return res
 

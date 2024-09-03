@@ -1,7 +1,7 @@
 from flask_restful import Resource                      # 接口处理方法
 from API_.DB.DB_model import Basic_Operations           # 数据查询方法
 from flask import request
-from flask_login import login_required
+from flask_login import login_required,current_user
 from API_.resources.admin import get_admin_power      # 鉴权方法
 import json
 
@@ -14,16 +14,19 @@ class _list:
         # 数据表头名称、数据类型、描述说明
         self.DataColumn =[
             {
+                "key":"1",
                 "field_name": "id",   # 字段名称
                 "field_type": "int",    # 字段类型
-                "remark": "功能id",      # 备注描述
+                "title": "功能id",      # 备注描述
+                "dataIndex": "id",
             },
-            {"field_name": "m_id", "field_type": "int", "remark": "关联菜单id"},
-            {"field_name": "name", "field_type": "int", "remark": "功能名称"},
-            {"field_name": "def_name", "field_type": "str", "remark": "函数名称字符user.add"},
-            {"field_name": "miaoshu", "field_type": "str", "remark": "描述"},
-            {"field_name": "create_time", "field_type": "timestamp", "remark": "创建时间"},
-            {"field_name": "update_time", "field_type": "timestamp", "remark": "更新时间"}
+            {"key":"2","field_name": "m_id", "field_type": "int", "title": "关联菜单id","dataIndex": "m_id",},
+            {"key":"3","field_name": "m_name", "field_type": "str", "title": "菜单名称","dataIndex": "m_name",},
+            {"key":"4","field_name": "name", "field_type": "int", "title": "功能名称","dataIndex": "name",},
+            {"key":"5","field_name": "def_name", "field_type": "str", "title": "函数名称字符user.add","dataIndex": "def_name",},
+            {"key":"6","field_name": "miaoshu", "field_type": "str", "title": "描述","dataIndex": "miaoshu",},
+            {"key":"7","field_name": "create_time", "field_type": "timestamp", "title": "创建时间","dataIndex": "create_time",},
+            {"key":"8","field_name": "update_time", "field_type": "timestamp", "title": "更新时间","dataIndex": "update_time",}
         ]
 
     # 获取数据表的列名称
@@ -129,6 +132,12 @@ class FunList(Resource):
         data_list = res.get('data')
 
         res['data'] = _list().re_data_list_name(data_list)
+
+        # 用户信息
+        res['user'] = current_user.user_obj
+
+        # 表头信息
+        res['colum'] = _list().DataColumn
 
         return res
 
