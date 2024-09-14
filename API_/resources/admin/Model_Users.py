@@ -133,6 +133,8 @@ class UserList(Resource):
 
         condition = re_data.get('condition')
 
+        # print(condition)
+
         user = Basic_Operations(_list().table_name)
 
         res = user.show(page, page_size, condition)

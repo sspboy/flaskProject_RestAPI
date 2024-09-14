@@ -5,7 +5,7 @@ def get_admin_power(func):
         print(current_user.id)
         print(current_user.account_type)
         account_type = current_user.account_type
-        if account_type != 2:
+        if account_type != "2":
             # 路由名称名称
             return 'Not admin power'
         # ruter_name = func.__qualname__

@@ -151,6 +151,8 @@ class Select_table():
 
         page_message['now_page'] = self.page  # 当前页
 
+        page_message['page_size'] = self.page_size  # 数量
+
         total_page = self.get_total_page_num().get('total_page')
 
         page_message['total_page'] = total_page  # 总页数
@@ -226,22 +228,25 @@ class Operate_table():
     def Update(self, setting_data, set_id):
 
         db_text = ''
+        print(setting_data)
 
         for x, y in setting_data.items():
 
             if y != '':
 
                 if type(y) == dict:     # json 字段处理
+
                     db_text = db_text + x + '=' + "'" + json.dumps(y,ensure_ascii=False) + "'" + ','
 
                 elif type(y) == int:    # 整数字段处理
-                    db_text = db_text + x + '=' + y + ','
+
+                    db_text = db_text + x + '=' + str(y) + ','
 
                 else:                   # 文本字段处理
                     db_text = db_text + x + '=' + "'" + y + "'" + ','
 
         sql = "UPDATE %s SET %s WHERE id='%s'" % (self.table_name, db_text[:-1], set_id)
-
+        print(sql)
         res = Data().updata(sql)
 
         return res

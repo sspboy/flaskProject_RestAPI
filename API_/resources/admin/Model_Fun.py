@@ -17,13 +17,11 @@ class _list:
                 "key":"1",
                 "field_name": "id",   # 字段名称
                 "field_type": "int",    # 字段类型
-                "title": "功能id",      # 备注描述
+                "title": "ID",      # 备注描述
                 "dataIndex": "id",
             },
-            {"key":"2","field_name": "m_id", "field_type": "int", "title": "关联菜单id","dataIndex": "m_id",},
-            {"key":"3","field_name": "m_name", "field_type": "str", "title": "菜单名称","dataIndex": "m_name",},
             {"key":"4","field_name": "name", "field_type": "int", "title": "功能名称","dataIndex": "name",},
-            {"key":"5","field_name": "def_name", "field_type": "str", "title": "函数名称字符user.add","dataIndex": "def_name",},
+            {"key":"5","field_name": "def_name", "field_type": "str", "title": "函数名称字符","dataIndex": "def_name",},
             {"key":"6","field_name": "miaoshu", "field_type": "str", "title": "描述","dataIndex": "miaoshu",},
             {"key":"7","field_name": "create_time", "field_type": "timestamp", "title": "创建时间","dataIndex": "create_time",},
             {"key":"8","field_name": "update_time", "field_type": "timestamp", "title": "更新时间","dataIndex": "update_time",}
