@@ -197,13 +197,15 @@ class Operate_table():
                 db_name = db_name + x + ','
                 if type(y) == dict:     # json 字段处理dict转json字符串
                     db_value = db_value + "'" + json.dumps(y, ensure_ascii=False) + "'" + ','
+                if type(y) == list:     # 列表 字段处理dict转json字符串
+                    db_value = db_value + "'" + json.dumps(y, ensure_ascii=False) + "'" + ','
                 elif type(y) == int:    # 整数字段处理
                     db_value = db_value + str(y) + ','
                 else:                   # 文本字段处理
                     db_value = db_value + "'" + str(y) + "'" + ','
 
         sql="insert into %s (%s) value (%s)" % (self.table_name, db_name[:-1],db_value[:-1])
-
+        print(sql)
         res = Data().inset(sql)
 
         return res
@@ -235,6 +237,10 @@ class Operate_table():
             if y != '':
 
                 if type(y) == dict:     # json 字段处理
+
+                    db_text = db_text + x + '=' + "'" + json.dumps(y,ensure_ascii=False) + "'" + ','
+
+                elif type(y) == list:  # 列表字段处理
 
                     db_text = db_text + x + '=' + "'" + json.dumps(y,ensure_ascii=False) + "'" + ','
 
