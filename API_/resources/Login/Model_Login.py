@@ -1,7 +1,7 @@
 from flask_restful import Resource                      # 接口处理方法
 from API_.DB.DB_model import Basic_Operations           # 数据查询方法
+from API_.resources.admin.Model_Menu import menu_list   # 菜单数据转义方法
 from flask import request,session
-import json
 from flask_login import UserMixin,LoginManager,login_user,logout_user,login_required
 
 
@@ -27,38 +27,97 @@ class LoadingUser():
     def __init__(self, username):
         self.username = username
 
+    # 判断用户返回用户信息：管理员、主账号、子账号
+    def judgment_user(self):
+
+        account_type = self.get_user_obj().get('account_type')
+
+        if account_type == '2':     # 【管理员】account_type = '2'
+            pass
+        elif account_type == '0':   # 【主账号】account_type = '0'
+            pass
+        elif account_type == '0':   # 【子账号】account_type = '1'
+            pass
+
+    # 管理员信息
+    def hold_super_admin(self):
+        sql = ''
+        pass
+
+    # 主账号信息
+    def hold_admin(self):
+        pass
+
+    # 子账号信息
+    def hold_member(self):
+        pass
+
     def get_user_obj(self):     # 根据 username 查询用户详情信息
-        user = Basic_Operations(_list().table_name)
+        user = Basic_Operations('user')
         res = user.detaile(self.username)
         detaile_data = _list().re_detaile_data_name(res)
         return detaile_data
 
-    # [账号类型]
+    # 【版本信息】# 根据版本号查询菜单信息
+    def get_version(self):
     # 通过id差版本信息
     # select * from version where id=(select v_id from user where id='xiaohaha')
-    #【后台管理员】：版本菜单(后台管理获取菜单)
-    #【主账号】：版本菜单(对应版本号获取菜单)
-    #【子账号】：角色菜单、功能权限、数据权限
+        pass
 
-    # 根据版本号查询菜单信息
+    # 【全部菜单信息】
+    def get_menu(self):
+        menu = Basic_Operations('menu')
+        res = menu.show(1, 100, None)
+        res_data = res.get('data')
+        menu_data_list = menu_list().re_data_list_name(res_data)
+        return menu_data_list
 
-    # 根据角色查询菜单、数据权限
+    # 获取所有一级菜单
+    def get_first_menu(self):
+        menu_data_list = self.get_menu()
+        # 过滤菜单
+        first_list = []
+        for i in menu_data_list:
+            if i.get('parent_id') == '0':
+                first_list.append(i)
+        return first_list
 
-    # 更具数据权限获取员工id
+    # 获取后台管理员菜单
+    def get_super_admin_menu(self):
+        first_list = self.get_first_menu()  # 一级菜单
+        menu_data_list = self.get_menu()    # 所有菜单
+        for i in first_list:
+            id = i.get('id')
+            c_list = []
+            for y in menu_data_list:
+                if y.get('parent_id') == str(id):
+                    c_list.append(y)
+            i['child'] = c_list
+        for x in first_list:
+            print(x)
 
-    # 【管理员】通过用户id查询版本信息：：：得到了所有菜单配置：：：无需菜单权限：：：无需数据权限：：
-    # select * from version where id=(select v_id from user where id='xiaohaha')
-    # SELECT * FROM user, version WHERE user.v_id = version.id
+    # 获取主账号菜单：：无管理后台
+    def get_admin_menu(self):
+        pass
 
-    # 【主账号】通过用户id查询版本信息：：：得到了所有菜单配置
+    # 获取子账号菜单：：过滤权限配置中不存在的菜单和功能
+    def get_member_menu(self):
+        pass
+
+    # 【角色信息】
+    def get_role(self):
+        pass
+
+
+    # 【数据权限】
+    def get_data_pemiss(self):
+        pass
+
+    # 【管理员】！无需版本信息：：！无需角色权限：：！无需菜单权限：：：！无需数据权限：：
+
+    # 【主账号】！无需角色权限：：！无需菜单权限：：：！无需数据权限：：
 
     # 【子账号】通过用户id查询，角色列表：：：一条对多条：：合并后等待菜单权限+数据权限
-    # 用户id获取版本信息 角色信息（角色权限中包含数据权限）
-    # SELECT *
-    # FROM user
-    # INNER JOIN version ON user.v_id = version.id
-    # WHERE user.id = 'xiaohaha';
-    # 合并菜单 合并功能权限 根据数据权限获取部门员工id
 
 
 # 请求视图加载用户====定义用户信息
@@ -88,14 +147,12 @@ def user_loader(username):
         return user
 
 
-# 定义【user输出格式】模型：详情
+# 定义【user输出格式】模型：数据查询
 class _list:
 
 
     def __init__(self):      # 列表数据
-
         self.table_name = 'user'
-
         # 数据表头名称、数据类型、描述说明
         self.DataColumn =[
             {
@@ -128,7 +185,7 @@ class _list:
         return r_list
 
 
-    # 添加数据列表字段名称
+    # 添加[数据列表]字段名称
     def re_data_list_name(self,data_list):
         if data_list != 'None':    # 不为空
             colum_name_list = self.re_colum_list()
@@ -143,7 +200,7 @@ class _list:
         else:                           # 为空
             return 'None'
 
-    # 数据详情添加字段名称
+    # 添加[数据详情]字段名称
     def re_detaile_data_name(self, detaile_data):
         if detaile_data != 'None':  # 不为空
             colum_name_list = self.re_colum_list()
@@ -200,3 +257,7 @@ class LoginOut(Resource):
 def unauthorized():
     return 'NOT Login power'
 
+
+if __name__ == '__main__':
+    loadinguser = LoadingUser('xiaohaha')
+    loadinguser.get_super_admin_menu()

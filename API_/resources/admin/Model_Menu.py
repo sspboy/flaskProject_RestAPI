@@ -7,7 +7,7 @@ import json
 
 
 # 定义【输出】模型：详情
-class _list:
+class menu_list:
 
     def __init__(self):      # 列表数据
         self.table_name = 'menu'
@@ -72,9 +72,9 @@ class MenuDetaile(Resource):
     @login_required
     @get_admin_power
     def get(self, u_id):
-        user = Basic_Operations(_list().table_name)
+        user = Basic_Operations(menu_list().table_name)
         res = user.detaile(u_id)
-        detaile_data = _list().re_detaile_data_name(res)
+        detaile_data = menu_list().re_detaile_data_name(res)
         return detaile_data
 
 
@@ -82,7 +82,7 @@ class MenuDetaile(Resource):
     @login_required
     @get_admin_power
     def delete(self, u_id):
-        user = Basic_Operations(_list().table_name)
+        user = Basic_Operations(menu_list().table_name)
         res = user.delete(u_id)
         return res
 
@@ -93,7 +93,7 @@ class MenuDetaile(Resource):
     def put(self, u_id):
         re_data = json.loads(request.get_data())
         setting_data = re_data.get('setting_data')
-        user = Basic_Operations(_list().table_name)
+        user = Basic_Operations(menu_list().table_name)
         res = user.update(setting_data, u_id)
         return res
 
@@ -107,7 +107,7 @@ class MenuList(Resource):
     @get_admin_power
     def put(self):
         re_data = json.loads(request.get_data())
-        user = Basic_Operations(_list().table_name)
+        user = Basic_Operations(menu_list().table_name)
         res = user.batchdel(re_data)
         return res
 
@@ -125,20 +125,20 @@ class MenuList(Resource):
 
         condition = re_data.get('condition')
 
-        user = Basic_Operations(_list().table_name)
+        user = Basic_Operations(menu_list().table_name)
 
         res = user.show(page, page_size, condition)
 
         # 转换datalist字段名称
         data_list = res.get('data')
 
-        res['data'] = _list().re_data_list_name(data_list)
+        res['data'] = menu_list().re_data_list_name(data_list)
 
         # 用户信息
         res['user'] = current_user.user_obj
 
         # 表头信息
-        res['colum'] = _list().DataColumn
+        res['colum'] = menu_list().DataColumn
 
         return res
 
@@ -151,6 +151,6 @@ class MenuAdd(Resource):
     @get_admin_power
     def post(self):
         re_data = json.loads(request.get_data())
-        user = Basic_Operations(_list().table_name)
+        user = Basic_Operations(menu_list().table_name)
         res = user.add(re_data)
         return res

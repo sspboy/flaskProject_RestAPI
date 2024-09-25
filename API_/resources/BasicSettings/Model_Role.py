@@ -14,11 +14,10 @@ class _list:
         self.DataColumn =[
             {
                 "key": "1",
-                "field_name": "id",   # 字段名称
-                "field_type": "int",    # 字段类型
-                "title": "数据唯一id",      # 备注描述
+                "field_name": "id", # 字段名称
+                "field_type": "int",# 字段类型
+                "title": "id",      # 备注描述
                 "dataIndex": "id",  # 数据索引
-
             },
             {"key": "2","field_name": "b_id", "field_type": "int", "title": "品牌id","dataIndex": "b_id",},
             {"key": "3","field_name": "role_name", "field_type": "str", "title": "角色名称","dataIndex": "role_name",},
@@ -142,5 +141,7 @@ class RoleAdd(Resource):
     def post(self):
         re_data = json.loads(request.get_data())
         user = Basic_Operations(_list().table_name)
+        # 默认添加品牌id
+        re_data['b_id'] = current_user.user_obj.get('b_id')
         res = user.add(re_data)
         return res
