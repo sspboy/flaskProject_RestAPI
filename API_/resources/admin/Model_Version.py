@@ -5,7 +5,7 @@ import json
 from flask_login import login_required,current_user
 
 # 定义【输出】模型：详情
-class _list:
+class version_list:
 
     def __init__(self):      # 列表数据
         self.table_name = 'version'
@@ -71,15 +71,15 @@ class VersionDetaile(Resource):
     # 查询详情
     @login_required
     def get(self, u_id):
-        user = Basic_Operations(_list().table_name)
+        user = Basic_Operations(version_list().table_name)
         res = user.detaile(u_id)
-        detaile_data = _list().re_detaile_data_name(res)
+        detaile_data = version_list().re_detaile_data_name(res)
         return detaile_data
 
 
     # 删-详情
     def delete(self, u_id):
-        user = Basic_Operations(_list().table_name)
+        user = Basic_Operations(version_list().table_name)
         res = user.delete(u_id)
         return res
 
@@ -88,7 +88,7 @@ class VersionDetaile(Resource):
     def put(self, u_id):
         re_data = json.loads(request.get_data())
         setting_data = re_data.get('setting_data')
-        user = Basic_Operations(_list().table_name)
+        user = Basic_Operations(version_list().table_name)
         res = user.update(setting_data, u_id)
         return res
 
@@ -100,7 +100,7 @@ class VersionList(Resource):
     # 批量删除
     def put(self):
         re_data = json.loads(request.get_data())
-        user = Basic_Operations(_list().table_name)
+        user = Basic_Operations(version_list().table_name)
         res = user.batchdel(re_data)
         return res
 
@@ -116,20 +116,20 @@ class VersionList(Resource):
 
         condition = re_data.get('condition')
 
-        user = Basic_Operations(_list().table_name)
+        user = Basic_Operations(version_list().table_name)
 
         res = user.show(page, page_size, condition)
 
         # 转换datalist字段名称
         data_list = res.get('data')
 
-        res['data'] = _list().re_data_list_name(data_list)
+        res['data'] = version_list().re_data_list_name(data_list)
 
         # 用户信息
         res['user'] = current_user.user_obj
 
         # 表头信息
-        res['colum'] = _list().DataColumn
+        res['colum'] = version_list().DataColumn
 
         return res
 
@@ -140,6 +140,6 @@ class VersionAdd(Resource):
     # 增
     def post(self):
         re_data = json.loads(request.get_data())
-        user = Basic_Operations(_list().table_name)
+        user = Basic_Operations(version_list().table_name)
         res = user.add(re_data)
         return res

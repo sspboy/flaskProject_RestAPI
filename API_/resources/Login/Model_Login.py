@@ -1,6 +1,10 @@
+import json
+
 from flask_restful import Resource                      # 接口处理方法
 from API_.DB.DB_model import Basic_Operations           # 数据查询方法
+from API_.DB.Data_con import *                          # 数据库操作方法
 from API_.resources.admin.Model_Menu import menu_list   # 菜单数据转义方法
+from API_.resources.admin.Model_Version import version_list   # 菜单数据转义方法
 from flask import request,session
 from flask_login import UserMixin,LoginManager,login_user,logout_user,login_required
 
@@ -32,7 +36,7 @@ class LoadingUser():
 
         account_type = self.get_user_obj().get('account_type')
 
-        if account_type == '2':     # 【管理员】account_type = '2'
+        if account_type == '2':     # 【后台管理员】account_type = '2'
             pass
         elif account_type == '0':   # 【主账号】account_type = '0'
             pass
@@ -41,15 +45,24 @@ class LoadingUser():
 
     # 管理员信息
     def hold_super_admin(self):
-        sql = ''
+        # 获取用户基本信息
+        # 所有菜单信息
         pass
 
     # 主账号信息
     def hold_admin(self):
+        # 获取用户信息
+        # 过滤版本菜单
+        # 过滤管理后台
         pass
 
     # 子账号信息
     def hold_member(self):
+        # 获取用户信息
+        # 过滤版本菜单
+        # 过滤管理后台
+        # 获取角色
+        # 过滤菜单、过滤功能权限、获取数据权限
         pass
 
     def get_user_obj(self):     # 根据 username 查询用户详情信息
@@ -58,50 +71,100 @@ class LoadingUser():
         detaile_data = _list().re_detaile_data_name(res)
         return detaile_data
 
-    # 【版本信息】# 根据版本号查询菜单信息
-    def get_version(self):
-    # 通过id差版本信息
-    # select * from version where id=(select v_id from user where id='xiaohaha')
+    # 【获取主账号数据】# 用户信息+版本信息+全部菜单
+    def get_admin_data(self):
+
+        sql = "SELECT * FROM (user INNER JOIN version ON user.v_id = version.id and user.id='%s') INNER JOIN menu" % self.username
+
+        res = Data().select(sql)
+
+        user_data = self.get_user_data(res)
+
+        version_data = self.get_version_data(res)
+
+        all_menu_list = self.get_menu_data(res)
+
+        super_menu = self.get_menu_child_list(all_menu_list)           # 后台管理员菜单、权限
+
+        admin_menu = self.get_admin_menu(all_menu_list, version_data)    # 主账号菜单、权限
+
+        for d in admin_menu:
+            print(d)
+
+        return ''
+
+    # 【获取子账号数据】
+    def get_member_data(self):
+        sql = ''
+        member_menu = '' # 子账号菜单
         pass
+
+    # 用户信息
+    def get_user_data(self,data):
+        user_data = _list().re_detaile_data_name(list(data[0])[:14])
+        return user_data
+
+    # 版本信息
+    def get_version_data(self,data):
+        ver_data = version_list().re_detaile_data_name(list(data[0])[14:26])
+        return ver_data
 
     # 【全部菜单信息】
-    def get_menu(self):
-        menu = Basic_Operations('menu')
-        res = menu.show(1, 100, None)
-        res_data = res.get('data')
-        menu_data_list = menu_list().re_data_list_name(res_data)
+    def get_menu_data(self,data):
+        res_data_list = []
+        for i in data:
+            res_data_list.append(i[23:33])
+        menu_data_list = menu_list().re_data_list_name(res_data_list)
         return menu_data_list
 
-    # 获取所有一级菜单
-    def get_first_menu(self):
-        menu_data_list = self.get_menu()
-        # 过滤菜单
-        first_list = []
-        for i in menu_data_list:
-            if i.get('parent_id') == '0':
-                first_list.append(i)
-        return first_list
+    # 获取后台管理员菜单：全部菜单+全部权限
+    def get_menu_child_list(self, data):
 
-    # 获取后台管理员菜单
-    def get_super_admin_menu(self):
-        first_list = self.get_first_menu()  # 一级菜单
-        menu_data_list = self.get_menu()    # 所有菜单
-        for i in first_list:
-            id = i.get('id')
+        first_list = []  # 一级菜单
+        for i in data:
+            if i.get('parent_id') == '0':
+                first_list.append(i.copy())
+
+        for z in first_list:
+            id = z.get('id')
             c_list = []
-            for y in menu_data_list:
+            for y in data:
                 if y.get('parent_id') == str(id):
                     c_list.append(y)
-            i['child'] = c_list
-        for x in first_list:
-            print(x)
+            z['child'] = c_list
 
-    # 获取主账号菜单：：无管理后台
-    def get_admin_menu(self):
-        pass
+        return first_list
+
+    # 获取主账号菜单：：无管理后台：：过滤版本中没有的菜单
+    def get_admin_menu(self, all_menu_list, version_data):
+        # 版本菜单id
+        menu_setting = version_data.get('menu_setting')
+        menu_setting_list = json.loads(menu_setting)
+
+        # 当前版本绑定的所有菜单
+        ver_menu_list = []
+        for i in all_menu_list:
+            if str(i.get('id')) in menu_setting_list:
+                ver_menu_list.append(i.copy())
+
+        # 当前版本所有菜单
+        for d in ver_menu_list:
+            parent_id = d.get('parent_id')
+            if parent_id != 0:
+                for z in all_menu_list:
+                    if str(z.get('id')) == parent_id and z not in ver_menu_list:
+                        ver_menu_list.append(z.copy())
+
+        admin_menu_list = self.get_menu_child_list(ver_menu_list)
+
+        return admin_menu_list
+
 
     # 获取子账号菜单：：过滤权限配置中不存在的菜单和功能
     def get_member_menu(self):
+        # 获取角色：：# 通过角色获取绑定的菜单
+        # 获取父标签
+        # 根据父标签载入子标签
         pass
 
     # 【角色信息】
@@ -118,6 +181,8 @@ class LoadingUser():
     # 【主账号】！无需角色权限：：！无需菜单权限：：：！无需数据权限：：
 
     # 【子账号】通过用户id查询，角色列表：：：一条对多条：：合并后等待菜单权限+数据权限
+
+
 
 
 # 请求视图加载用户====定义用户信息
@@ -200,6 +265,7 @@ class _list:
         else:                           # 为空
             return 'None'
 
+
     # 添加[数据详情]字段名称
     def re_detaile_data_name(self, detaile_data):
         if detaile_data != 'None':  # 不为空
@@ -260,4 +326,4 @@ def unauthorized():
 
 if __name__ == '__main__':
     loadinguser = LoadingUser('xiaohaha')
-    loadinguser.get_super_admin_menu()
+    loadinguser.get_admin_data()
