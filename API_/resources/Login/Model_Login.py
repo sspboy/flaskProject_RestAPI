@@ -1,5 +1,3 @@
-import json
-
 from flask_restful import Resource                      # 接口处理方法
 from API_.DB.DB_model import Basic_Operations           # 数据查询方法
 from API_.DB.Data_con import *                          # 数据库操作方法
@@ -7,6 +5,7 @@ from API_.resources.admin.Model_Menu import menu_list   # 菜单数据转义方�
 from API_.resources.admin.Model_Version import version_list   # 菜单数据转义方法
 from flask import request,session
 from flask_login import UserMixin,LoginManager,login_user,logout_user,login_required
+import json, re
 
 
 login_manager = LoginManager()                      # 初始化一个 LoginManager 类对象
@@ -29,47 +28,38 @@ class User(UserMixin):
 class LoadingUser():
 
     def __init__(self, username):
+
         self.username = username
 
     # 判断用户返回用户信息：管理员、主账号、子账号
-    def judgment_user(self):
+    def get_user_obj(self):
 
-        account_type = self.get_user_obj().get('account_type')
+        user_type = self.hold_user_type() # 判断用户
 
-        if account_type == '2':     # 【后台管理员】account_type = '2'
+        if user_type == 'admin':     # 【后台管理员】【主账号】
+            # 载入管理员菜单权限
+            user_data = self.get_admin_data()
+            return user_data
+
+        elif user_type == 'member':   # 【子账号】
+            # 载入主张号菜单权限
             pass
-        elif account_type == '0':   # 【主账号】account_type = '0'
-            pass
-        elif account_type == '0':   # 【子账号】account_type = '1'
-            pass
 
-    # 管理员信息
-    def hold_super_admin(self):
-        # 获取用户基本信息
-        # 所有菜单信息
-        pass
 
-    # 主账号信息
-    def hold_admin(self):
-        # 获取用户信息
-        # 过滤版本菜单
-        # 过滤管理后台
-        pass
+    # 通过用户名称识别用户类别：
+    def hold_user_type(self):
+        search_res = re.search(':', self.username)
 
-    # 子账号信息
-    def hold_member(self):
-        # 获取用户信息
-        # 过滤版本菜单
-        # 过滤管理后台
-        # 获取角色
-        # 过滤菜单、过滤功能权限、获取数据权限
-        pass
+        if search_res == None:
+            return 'admin'
+        else:
+            return 'member'
 
-    def get_user_obj(self):     # 根据 username 查询用户详情信息
-        user = Basic_Operations('user')
-        res = user.detaile(self.username)
-        detaile_data = _list().re_detaile_data_name(res)
-        return detaile_data
+    # def get_user_obj(self):     # 根据 username 查询用户详情信息
+    #     user = Basic_Operations('user')
+    #     res = user.detaile(self.username)
+    #     detaile_data = _list().re_detaile_data_name(res)
+    #     return detaile_data
 
     # 【获取主账号数据】# 用户信息+版本信息+全部菜单
     def get_admin_data(self):
@@ -78,26 +68,31 @@ class LoadingUser():
 
         res = Data().select(sql)
 
-        user_data = self.get_user_data(res)
+        if len(res) == 0:
+            return 'None'
+        else:
 
-        version_data = self.get_version_data(res)
+            user_data = self.get_user_data(res)                             # 获取用户信息
 
-        all_menu_list = self.get_menu_data(res)
+            version_data = self.get_version_data(res)                       # 获取版本信息
 
-        super_menu = self.get_menu_child_list(all_menu_list)           # 后台管理员菜单、权限
+            all_menu_list = self.get_menu_data(res)                         # 获取所有菜单列表
 
-        admin_menu = self.get_admin_menu(all_menu_list, version_data)    # 主账号菜单、权限
+            super_menu = self.get_menu_child_list(all_menu_list)            # 【后台管理员】菜单、权限
 
-        for d in admin_menu:
-            print(d)
+            admin_menu = self.get_admin_menu(all_menu_list, version_data)   # 【主账号】菜单、权限
 
-        return ''
+            account_type = user_data.get('account_type')
 
-    # 【获取子账号数据】
-    def get_member_data(self):
-        sql = ''
-        member_menu = '' # 子账号菜单
-        pass
+            if account_type == '2': # 管理员
+
+                user_data['menu'] = super_menu.copy()
+
+            elif account_type == '0':# 主账号
+
+                user_data['menu'] = admin_menu.copy()
+
+            return user_data
 
     # 用户信息
     def get_user_data(self,data):
@@ -158,6 +153,13 @@ class LoadingUser():
         admin_menu_list = self.get_menu_child_list(ver_menu_list)
 
         return admin_menu_list
+
+
+    # 【获取子账号数据】
+    def get_member_data(self):
+        sql = ''
+        member_menu = '' # 子账号菜单
+        pass
 
 
     # 获取子账号菜单：：过滤权限配置中不存在的菜单和功能
