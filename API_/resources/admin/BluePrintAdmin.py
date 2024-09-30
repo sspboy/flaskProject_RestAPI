@@ -1,7 +1,7 @@
 from flask import Blueprint
 from flask_restful import Api
 
-from API_.resources.admin.Model_Users import UserDetaile,UserList,UserAdd               # 【user】用户资源
+from API_.resources.admin.Model_Users import UserDetaile,UserList,UserAdd,UserMessage               # 【user】用户资源
 from API_.resources.admin.Model_Menu import MenuDetaile,MenuList,MenuAdd                # 【menu】菜单资源
 from API_.resources.admin.Model_Version import VersionDetaile,VersionList,VersionAdd    # 【version】版本资源
 from API_.resources.admin.Model_Fun import FunDetaile,FunList,FunAdd                    # 【function】功能权限资源
@@ -11,10 +11,13 @@ admin_blueprint = Blueprint('admin', __name__)
 
 api = Api(admin_blueprint)
 
-# 登录管理后台
+# 权限信息
+# 当前用户信息
+# 当前权限信息
 
 
 # 用户
+api.add_resource(UserMessage, '/user/message')      # 会员信息+菜单+权限
 api.add_resource(UserAdd, '/user/add')              # 新增
 api.add_resource(UserList, '/user/list')            # 列表+条件查询、批量删除
 api.add_resource(UserDetaile, '/user/<u_id>')       # 删除、查询、更新

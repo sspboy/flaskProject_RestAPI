@@ -164,3 +164,9 @@ class UserAdd(Resource):
         user = Basic_Operations(_list().table_name)
         res = user.add(re_data)
         return res
+
+
+class UserMessage(Resource):
+    @login_required
+    def get(self):
+        return current_user.user_obj
