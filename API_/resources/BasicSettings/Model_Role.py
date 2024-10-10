@@ -125,9 +125,6 @@ class RoleList(Resource):
 
         res['data'] = _list().re_data_list_name(data_list)
 
-        # 用户信息
-        res['user'] = current_user.user_obj
-
         # 表头信息
         res['colum'] = _list().DataColumn
 

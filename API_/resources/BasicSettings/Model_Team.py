@@ -12,23 +12,23 @@ class _list:
         # 数据表头名称、数据类型、描述说明
         self.DataColumn =[
             {
+                "key": "1",
                 "field_name": "id",   # 字段名称
                 "field_type": "int",    # 字段类型
-                "remark": "数据唯一id",      # 备注描述
+                "title": "id",      # 备注描述
+                "dataIndex": "id",
             },
-            {"field_name": "name", "field_type": "str", "remark": "子账号user:name"},
-            {"field_name": "b_id", "field_type": "int", "remark": "品牌id"},
-            {"field_name": "nickname", "field_type": "str", "remark": "昵称"},
-            {"field_name": "mobile", "field_type": "int", "remark": "手机号"},
-            {"field_name": "password", "field_type": "str", "remark": "密码"},
-            {"field_name": "state", "field_type": "int", "remark": "员工状态"},
-            {"field_name": "role", "field_type": "str", "remark": "角色"},
-            {"field_name": "funpermission", "field_type": "str", "remark": "功能权限"},
-            {"field_name": "datapermission", "field_type": "str", "remark": "数据权限"},
-            {"field_name": "department_id", "field_type": "int", "remark": "部门id"},
-            {"field_name": "department_name", "field_type": "str", "remark": "部门名称"},
-            {"field_name": "create_time", "field_type": "timestamp", "remark": "创建时间"},
-            {"field_name": "update_time", "field_type": "timestamp", "remark": "更新时间"}
+            {"key": "2","field_name": "name", "field_type": "str", "title": "子账号user:name","dataIndex": "name",},
+            {"key": "3","field_name": "b_id", "field_type": "int", "title": "品牌id","dataIndex": "b_id",},
+            {"key": "4","field_name": "nickname", "field_type": "str", "title": "昵称","dataIndex": "nickname",},
+            {"key": "5","field_name": "mobile", "field_type": "int", "title": "手机号","dataIndex": "mobile",},
+            {"key": "6","field_name": "password", "field_type": "str", "title": "密码","dataIndex": "password",},
+            {"key": "7","field_name": "state", "field_type": "int", "title": "员工状态","dataIndex": "state",},
+            {"key": "8","field_name": "role", "field_type": "str", "title": "角色","dataIndex": "role",},
+            {"key": "9","field_name": "department_id", "field_type": "int", "title": "部门id","dataIndex": "department_id",},
+            {"key": "10","field_name": "department_name", "field_type": "str", "title": "部门名称","dataIndex": "department_name",},
+            {"key": "11","field_name": "create_time", "field_type": "timestamp", "title": "创建时间","dataIndex": "create_time",},
+            {"key": "12","field_name": "update_time", "field_type": "timestamp", "title": "更新时间","dataIndex": "update_time",}
         ]
 
     # 获取数据表的列名称
@@ -125,6 +125,9 @@ class TeamList(Resource):
         data_list = res.get('data')
 
         res['data'] = _list().re_data_list_name(data_list)
+
+        # 表头信息
+        res['colum'] = _list().DataColumn
 
         return res
 
