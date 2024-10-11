@@ -18,7 +18,7 @@ class _list:
                 "title": "id",      # 备注描述
                 "dataIndex": "id",
             },
-            {"key": "2","field_name": "name", "field_type": "str", "title": "子账号user:name","dataIndex": "name",},
+            {"key": "2","field_name": "name", "field_type": "str", "title": "子账号","dataIndex": "name",},
             {"key": "3","field_name": "b_id", "field_type": "int", "title": "品牌id","dataIndex": "b_id",},
             {"key": "4","field_name": "nickname", "field_type": "str", "title": "昵称","dataIndex": "nickname",},
             {"key": "5","field_name": "mobile", "field_type": "int", "title": "手机号","dataIndex": "mobile",},
