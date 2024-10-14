@@ -114,9 +114,15 @@ class RoleList(Resource):
 
         page_size = re_data.get('page_size')
 
-        condition = re_data.get('condition')
+        condition = re_data.get('condition')  # 查询条件：品牌id+权限id
+
+        brand_id = str(current_user.user_obj.get('b_id')) # 品牌id
+
+        brand_condition = {'column_name': 'b_id', 'value': brand_id, 'operator': '='} # 查询条件
 
         user = Basic_Operations(_list().table_name)
+
+        user.add_condition(condition, brand_condition) # 添加品牌id查询条件
 
         res = user.show(page, page_size, condition)
 

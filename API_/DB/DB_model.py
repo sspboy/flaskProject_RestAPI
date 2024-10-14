@@ -51,11 +51,16 @@ class Select_table():
             for i in self.condition:
                 type = i.get('type')
                 if type == 'where':  # 筛选 where语句
+
                     w_text = ''
+
                     condition = i.get('condition')
+
                     for w in condition:
+
                         w_text = w_text + ' and ' + w.get('column_name') + ' ' + w.get('operator') + ' ' + "'" + w.get(
                             'value') + "'"
+
                     where_text = 'where' + w_text[4:]
 
                 if type == 'orderby':  # 排序 orderby
@@ -78,6 +83,7 @@ class Select_table():
         elif page > 1:
             page_num = (page - 1) * self.page_size
         return page_num
+
 
     def get_total_page_num(self):  # 获取内容总页数-可见
 
@@ -285,6 +291,7 @@ class Operate_table():
 
 # 封装[表]的基础操作:将列表查询、增删改查合并到一个类里面
 class Basic_Operations():
+
     def __init__(self, table_name):
         self.table_name = table_name
 
@@ -342,6 +349,19 @@ class Basic_Operations():
 
         return res
 
+    # 列表查询默认条件condition添加where条件
+    def add_condition(self, condition, obj):
+
+        wehe_number = 0
+        if condition != 'None': # 有查询条件 有where
+            for i in condition:
+                if i.get('type') == 'where':
+                    i.get('condition').append(obj)
+                    wehe_number = wehe_number + 1
+
+        if wehe_number == 0 and condition != 'None': # 有查询条件 无where
+
+            condition.append({'type':'where','condition':[obj]})
 
     # 数据表批量导入CVS
     # 数据表批量导出CVS

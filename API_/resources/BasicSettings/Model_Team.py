@@ -1,6 +1,7 @@
 from flask_restful import Resource                      # 接口处理方法
 from API_.DB.DB_model import Basic_Operations           # 数据查询方法
 from flask import request
+from flask_login import login_required,current_user
 import json
 
 
@@ -117,7 +118,13 @@ class TeamList(Resource):
 
         condition = re_data.get('condition')
 
+        brand_id = str(current_user.user_obj.get('b_id'))  # 品牌id
+
+        brand_condition = {'column_name': 'b_id', 'value': brand_id, 'operator': '='}  # 查询条件
+
         user = Basic_Operations(_list().table_name)
+
+        user.add_condition(condition, brand_condition) # 添加品牌id查询条件
 
         res = user.show(page, page_size, condition)
 
@@ -139,5 +146,6 @@ class TeamAdd(Resource):
     def post(self):
         re_data = json.loads(request.get_data())
         user = Basic_Operations(_list().table_name)
+        re_data['b_id'] = current_user.user_obj.get('b_id')
         res = user.add(re_data)
         return res
