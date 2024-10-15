@@ -22,7 +22,6 @@ class _list:
             {"key": "2","field_name": "b_id", "field_type": "int", "title": "品牌id","dataIndex": "b_id",},
             {"key": "3","field_name": "name", "field_type": "str", "title": "部门名称","dataIndex": "name",},
             {"key": "4","field_name": "parent_id", "field_type": "int", "title": "父部门id","dataIndex": "parent_id",},
-            {"key": "5","field_name": "in_number", "field_type": "str", "title": "序号","dataIndex": "in_number",},
             {"key": "6","field_name": "create_time", "field_type": "timestamp", "title": "创建时间","dataIndex": "create_time",},
             {"key": "7","field_name": "update_time", "field_type": "timestamp", "title": "更新时间","dataIndex": "update_time",}
         ]
@@ -141,5 +140,7 @@ class DepartmentAdd(Resource):
     def post(self):
         re_data = json.loads(request.get_data())
         user = Basic_Operations(_list().table_name)
+        # 默认添加品牌id
+        re_data['b_id'] = current_user.user_obj.get('b_id')
         res = user.add(re_data)
         return res
