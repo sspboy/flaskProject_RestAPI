@@ -48,6 +48,7 @@ class LoadingUser():
 
     # 通过用户名称识别用户类别：
     def hold_user_type(self):
+
         search_res = re.search(':', self.username)
 
         if search_res == None:
