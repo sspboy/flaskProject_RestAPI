@@ -133,6 +133,7 @@ class LoadingUser():
 
     # 获取主账号菜单：：无管理后台：：过滤版本中没有的菜单
     def get_admin_menu(self, all_menu_list, version_data):
+
         # 版本菜单id
         menu_setting = version_data.get('menu_setting')
         menu_setting_list = json.loads(menu_setting)

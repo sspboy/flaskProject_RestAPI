@@ -9,7 +9,6 @@ login_blueprint = Blueprint('login', __name__)
 
 api = Api(login_blueprint)
 
-
 # 验证登录
 api.add_resource(Login, '')
 
